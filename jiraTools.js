@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         jira工具箱
 // @namespace    qigege
-// @version      1.0.5
+// @version      1.0.6
 // @description  jiar工具箱
 // @author       qgg
 // @match        http://172.19.5.17:8888/browse/*
@@ -72,9 +72,12 @@
 
         const fileName = `${jiraId}_${user}_${summary} `
 
-        const analysis = document.querySelector(".user-content-block").innerText.trimStart()
-        const sln = document.querySelector("#customfield_10910-val").innerText.trimStart()
-        const sugg = document.querySelector("#field-customfield_11700").children[0].children[1].innerText.trimStart()
+        const analysis = document.querySelector(".user-content-block")
+            ? document.querySelector(".user-content-block").innerText.trimStart() : "无";
+        const sln = document.querySelector("#customfield_10910-val")
+            ? document.querySelector("#customfield_10910-val").innerText.trimStart() : "无";
+        const sugg = document.querySelector("#field-customfield_11700") && document.querySelector("#field-customfield_11700").children[0].children[1]
+            ? document.querySelector("#field-customfield_11700").children[0].children[1].innerText.trimStart() : "无";
 
         const hint = '<span style="color: gray; font-size: smaller;">(开头的空格没想到办法处理，手工改下吧)</span>'
 
