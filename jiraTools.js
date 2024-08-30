@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         jira工具箱
 // @namespace    qigege
-// @version      1.0.6
+// @version      1.0.7
 // @description  jiar工具箱
 // @author       qgg
 // @match        http://172.19.5.17:8888/browse/*
@@ -290,21 +290,22 @@ flex-direction: column;
         showFloatingMessage("已将以下内容增加到剪切板\n\n" + content);
     }
 
-    function addOpsbarButton(needAdd, label, action) {
+    function addOpsbarButton(needAdd, label, action, tooltip) {
         const id = label.replaceAll(' ', '');
         const existingButton = document.querySelector('#' + id);
         if (needAdd && !existingButton) {
-            document.querySelector("#opsbar-opsbar-transitions").appendChild(createButton(label, action));
+            document.querySelector("#opsbar-opsbar-transitions").appendChild(createButton(label, action, tooltip));
         } else if (!needAdd && existingButton) {
             existingButton.remove();
         }
     }
 
-    function createButton(label, clickHandler) {
+    function createButton(label, clickHandler, tooltip) {
         const btn = document.createElement('a');
         btn.className = "aui-button toolbar-trigger issueaction-workflow-transition";
         btn.href = "#";
         btn.id = label.replaceAll(' ', '');
+        btn.title = tooltip;
         const span = document.createElement('span');
         span.className = "trigger-label";
         span.innerHTML = label;
@@ -345,15 +346,15 @@ flex-direction: column;
     }
 
     function init() {
-        addOpsbarButton(addCopyLog, 'Copy Log', copyLog);
+        addOpsbarButton(addCopyLog, 'Copy Log', copyLog, "快捷复制svn提交log");
 
         if (document.querySelector("#type-val").innerText.includes("需求")) {
-            addOpsbarButton(addCopyFileName, 'Copy FileName', copyFileName);
-            addOpsbarButton(addCreateDoc, 'Create Doc', createDoc);
+            addOpsbarButton(addCopyFileName, 'Copy FileName', copyFileName, "快捷复制文档名称");
+            addOpsbarButton(addCreateDoc, 'Create Doc', createDoc, "快捷创建文档，支持jira维护后一键生成文档");
         }
 
-        addOpsbarButton(addCloseRightPanel, 'Close Right Panel', closeRightPanel);
-        addOpsbarButton(addSetting, 'Setting', setting);
+        addOpsbarButton(addCloseRightPanel, 'Close Right Panel', closeRightPanel, "关闭右侧栏");
+        addOpsbarButton(addSetting, 'Setting', setting, "设置");
     }
 
     let addCopyLog = false;
