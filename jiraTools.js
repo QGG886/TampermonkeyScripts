@@ -1,8 +1,7 @@
-
 // ==UserScript==
 // @name         jira工具箱
 // @namespace    qigege
-// @version      1.0.3
+// @version      1.0.5
 // @description  jiar工具箱
 // @author       qgg
 // @match        http://172.19.5.17:8888/browse/*
@@ -52,6 +51,11 @@
         addClipboard(content);
     }
 
+    function calculateRows(content) {
+        const lines = content.split('\n');
+        return lines.length + 1;
+    }
+
     function createDoc() {
         backboard.hidden = false;
 
@@ -66,17 +70,25 @@
             return;
         }
 
-        const fileName = `${jiraId}_${user}_${summary} `;
+        const fileName = `${jiraId}_${user}_${summary} `
+
+        const analysis = document.querySelector(".user-content-block").innerText.trimStart()
+        const sln = document.querySelector("#customfield_10910-val").innerText.trimStart()
+        const sugg = document.querySelector("#field-customfield_11700").children[0].children[1].innerText.trimStart()
+
+        const hint = '<span style="color: gray; font-size: smaller;">(开头的空格没想到办法处理，手工改下吧)</span>'
+
         const dialog = createDialog("Auto Create Doc", [
-            createNewDocField('文件名称', "x-file-name", fileName, 2),
-            createNewDocField('需求描述', "x-desc", "无", 2),
-            createNewDocField('需求分析', "x-analyes", document.querySelector(".user-content-block").innerText, 12),
-            createNewDocField('解决方案', "x-sln", "无", 2),
-            createNewDocField('测试建议', "x-sugg", "无", 2),
-            createNewDocField('自测场景', "x-self-text", "无", 2),
-            createNewDocField('相关脚本', "x-script", "无", 2)
+            createNewDocField('文件名称', "x-file-name", fileName, 1),
+            createNewDocField('需求描述', "x-desc", "无", 1),
+            createNewDocField('需求分析' + hint, "x-analyes", analysis, calculateRows(analysis)),
+            createNewDocField('解决方案' + hint, "x-sln", sln, calculateRows(sln)),
+            createNewDocField('测试建议' + hint, "x-sugg", sugg, calculateRows(sugg)),
+            createNewDocField('自测场景', "x-self-text", "无", 1),
+            createNewDocField('相关脚本', "x-script", "无", 1)
         ], () => {
-            const content = `【需求描述】\n${document.querySelector("#x-desc").value} \n
+            const content =
+                `【需求描述】\n${document.querySelector("#x-desc").value} \n
 【需求分析】\n${document.querySelector("#x-analyes").value} \n
 【解决方案】\n${document.querySelector("#x-sln").value} \n
 【测试建议】\n${document.querySelector("#x-sugg").value} \n
@@ -99,7 +111,7 @@
         const labelElement = document.createElement('label');
         labelElement.innerHTML = label;
         labelElement.style.display = "inline-block";
-        labelElement.style.width = "100px";
+        // labelElement.style.width = "100px";
         labelElement.style.verticalAlign = "middle";
         field.appendChild(labelElement);
 
@@ -115,7 +127,6 @@
         textBox.style.fontFamily = "inherit";
         textBox.style.boxSizing = "border-box";
         textBox.style.borderRadius = "3.01px";
-        console.log(content)
 
         textBox.textContent = content;
 
@@ -245,7 +256,7 @@ flex-direction: column;
         dialog.appendChild(btnContainer);
 
         // 添加Esc键关闭功能
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 backboard.hidden = true;
                 document.body.removeChild(dialog);
@@ -313,14 +324,14 @@ flex-direction: column;
         floatingDiv.style.opacity = '0';
         floatingDiv.style.transition = 'opacity 0.5s ease-in-out';
         floatingDiv.innerHTML = message.replace(/\n/g, '<br>');
-        
+
         document.body.appendChild(floatingDiv);
-        
+
         // 渐入动画
         setTimeout(() => {
             floatingDiv.style.opacity = '1';
         }, 10);
-        
+
         // 渐出动画
         setTimeout(() => {
             floatingDiv.style.opacity = '0';
@@ -329,7 +340,7 @@ flex-direction: column;
             });
         }, 4500);
     }
-    
+
     function init() {
         addOpsbarButton(addCopyLog, 'Copy Log', copyLog);
 
