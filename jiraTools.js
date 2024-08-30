@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         jira工具箱
 // @namespace    qigege
-// @version      1.0.7
+// @version      1.0.9
 // @description  jiar工具箱
 // @author       qgg
 // @match        http://172.19.5.17:8888/browse/*
@@ -79,14 +79,13 @@
         const sugg = document.querySelector("#field-customfield_11700") && document.querySelector("#field-customfield_11700").children[0].children[1]
             ? document.querySelector("#field-customfield_11700").children[0].children[1].innerText.trimStart() : "无";
 
-        const hint = '<span style="color: gray; font-size: smaller;">(开头的空格没想到办法处理，手工改下吧)</span>'
 
         const dialog = createDialog("Auto Create Doc", [
             createNewDocField('文件名称', "x-file-name", fileName, 1),
             createNewDocField('需求描述', "x-desc", "无", 1),
-            createNewDocField('需求分析' + hint, "x-analyes", analysis, calculateRows(analysis)),
-            createNewDocField('解决方案' + hint, "x-sln", sln, calculateRows(sln)),
-            createNewDocField('测试建议' + hint, "x-sugg", sugg, calculateRows(sugg)),
+            createNewDocField('需求分析', "x-analyes", analysis, calculateRows(analysis)),
+            createNewDocField('解决方案', "x-sln", sln, calculateRows(sln)),
+            createNewDocField('测试建议', "x-sugg", sugg, calculateRows(sugg)),
             createNewDocField('自测场景', "x-self-text", "无", 1),
             createNewDocField('相关脚本', "x-script", "无", 1)
         ], () => {
@@ -114,8 +113,8 @@
         const labelElement = document.createElement('label');
         labelElement.innerHTML = label;
         labelElement.style.display = "inline-block";
-        // labelElement.style.width = "100px";
-        labelElement.style.verticalAlign = "middle";
+        labelElement.style.width = "100px";
+        labelElement.style.verticalAlign = "top"; // 修改为top，使label和输入框平齐
         field.appendChild(labelElement);
 
         const textBox = document.createElement('textarea');
@@ -126,7 +125,7 @@
         textBox.style.border = "2px solid var(--aui-form-field-border-color)";
         textBox.style.transition = "background-color 0.2s ease-in-out, border-color 0.2s ease-in-out";
         textBox.style.resize = "vertical";
-        textBox.style.verticalAlign = "middle";
+        textBox.style.verticalAlign = "top"; // 修改为top，使label和输入框平齐
         textBox.style.fontFamily = "inherit";
         textBox.style.boxSizing = "border-box";
         textBox.style.borderRadius = "3.01px";
